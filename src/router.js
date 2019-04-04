@@ -1,15 +1,40 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from './views/Home.vue'
+import Pendaftaran from './views/Pendaftaran.vue'
+import Payment from './views/Payment'
+import PaymentBankTransfer from './views/Payment_Bank_Transfer'
+import Callback from './views/Callback'
+import PaymentBt from './views/PaymentBt'
 
 Vue.use(Router)
 
 export default new Router({
+  mode: 'history',
   routes: [
     {
       path: '/',
-      name: 'home',
-      component: Home
+      name: 'pendaftaran',
+      component: Pendaftaran
+    },
+    {
+      path: '/payment/:register_id/:temporary_id',
+      name: 'payment',
+      component: Payment
+    },
+    {
+      path: '/payment_bank_transfer/:register_id/:temporary_id',
+      name: 'payment_bank_transfer',
+      component: PaymentBankTransfer
+    },
+    {
+      path: '/callback',
+      name: 'callback',
+      component: Callback
+    },
+    {
+      path: '/payment_bt/:register_id/:temporary_id',
+      name: 'payment_bt',
+      component: PaymentBt
     },
     {
       path: '/about',
