@@ -1,18 +1,85 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div class="container mb-3">
+    <AppHeader title="PULKAM 2019" subHeader="Pendaftaran atas talian"/>
+
+    <div class="row">
+      <div class="col-sm-12 col-md-6">
+        <div class="card h-100" @click="goToPendaftaran">
+          <div class="card-body">
+              <h3>Pendaftaran Baru</h3>
+                {{ test}}
+              </div>
+        </div>
+      </div>
+      <div class="col-sm-12 col-md-6">
+        <div class="card h-100">
+          <div class="card-body">
+            <h3>Kemaskini Maklumat</h3>
+            <div class="mt-4">
+              <form @submit.prevent="submitFormKemaskini">
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text" style="width:90px">Email</span>
+                  </div>
+                  <input type="email" class="form-control" placeholder="Registered Email"
+                  v-model="email">
+                </div>
+
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text" style="width:90px">Temp Id</span>
+                  </div>
+                  <input type="text" class="form-control" placeholder="Temporary Id" v-model="code">
+                </div>
+
+                <div class="text-right">
+                  <button type="submit" class="btn btn-primary">Semak Daftar</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
+import AppHeader from "@/components/AppHeader";
+import { API } from "../config"
+import Axios from 'axios';
 
 export default {
-  name: 'home',
+  name: "home",
   components: {
-    HelloWorld
+    'AppHeader': AppHeader
+  },
+  data (){
+      return {
+          test: API.baseurl,
+          email: '',
+          code: ''
+      }
+  },
+  methods: {
+    goToPendaftaran: function() {
+      this.$router.push({
+        name: "pendaftaran"
+      });
+    },
+    submitFormKemaskini: function() {
+      Axios
+      .get(API.baseurl +'register/reopen?email='+ this.email + '&code='+ this.code)
+      .then(response => {
+        if(response.data.response == false){
+          alert('Not Found')
+        } else {
+          let resp = response.data.response
+          window.location.href = './pendaftaran?rid=' + resp.register_id + '&tid=' + resp.temporary_id
+        }
+      })
+    },
+    kemaskiniMaklumat: function() {}
   }
-}
+};
 </script>

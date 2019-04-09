@@ -1,10 +1,12 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Pendaftaran from './views/Pendaftaran.vue'
+import Home from './views/Home.vue'
 import Payment from './views/Payment'
 import PaymentBankTransfer from './views/Payment_Bank_Transfer'
 import Callback from './views/Callback'
 import PaymentBt from './views/PaymentBt'
+import Ticket from './views/Ticket'
 
 Vue.use(Router)
 
@@ -13,6 +15,11 @@ export default new Router({
   routes: [
     {
       path: '/',
+      name: 'home',
+      component: Home
+    },
+    {
+      path: '/pendaftaran',
       name: 'pendaftaran',
       component: Pendaftaran
     },
@@ -35,6 +42,11 @@ export default new Router({
       path: '/payment_bt/:register_id/:temporary_id',
       name: 'payment_bt',
       component: PaymentBt
+    },
+    {
+      path: '/ticket/:register_id/:temporary_id',
+      name: 'ticket',
+      component: Ticket
     },
     {
       path: '/about',

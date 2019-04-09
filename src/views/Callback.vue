@@ -11,74 +11,77 @@
         <li class="list-inline-item">03 3122 4241</li>
       </ul>
     </div>
-    <div class="card h-100">
-      <div class="card-body">
-        <div class="row">
-          <div class="col-sm-4 text-left pt-0 pb-0">
-            <table class="table table-sm mt-4">
-              <tbody>
-                <tr>
-                  <th>Payment Status</th>
-                  <td class="text-right">{{payment_status}}</td>
-                </tr>
-                <tr>
-                  <th>Invoice No</th>
-                  <td class="text-right">#2019-{{info.invoice_no}}</td>
-                </tr>
-                <tr>
-                  <th style="vertical-align: top;">Issued To</th>
-                  <td class="text-right text-uppercase">{{ info.nama }}</td>
-                </tr>
-                <tr>
-                  <th style="vertical-align: top;">Email</th>
-                  <td class="text-right">{{ info.email }}</td>
-                </tr>
+    <div ref="content">
+      <div class="card h-100">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-sm-4 text-left pt-0 pb-0">
+              <table class="table table-sm mt-4">
+                <tbody>
+                  <tr>
+                    <th>Payment Status</th>
+                    <td class="text-right">{{payment_status}}</td>
+                  </tr>
+                  <tr>
+                    <th>Invoice No</th>
+                    <td class="text-right">#2019-{{info.invoice_no}}</td>
+                  </tr>
+                  <tr>
+                    <th style="vertical-align: top;">Issued To</th>
+                    <td class="text-right text-uppercase">{{ info.nama }}</td>
+                  </tr>
+                  <tr>
+                    <th style="vertical-align: top;">Email</th>
+                    <td class="text-right">{{ info.email }}</td>
+                  </tr>
 
-                <tr>
-                  <th>Invoice Date</th>
-                  <td class="text-right">{{ info.invoice_date }}</td>
-                </tr>
+                  <tr>
+                    <th>Invoice Date</th>
+                    <td class="text-right">{{ info.invoice_date }}</td>
+                  </tr>
 
-                <tr>
-                  <td colspan="2">
-                    <br>
-                    <br>
-                  </td>
-                </tr>
+                  <tr>
+                    <td colspan="2">
+                      <br>
+                      <br>
+                    </td>
+                  </tr>
 
-                <tr>
-                  <th>Total Compound</th>
-                  <td class="text-right">RM 800.00</td>
-                </tr>
+                  <tr>
+                    <th>Total Compound</th>
+                    <td class="text-right">RM 800.00</td>
+                  </tr>
 
-                <tr>
-                  <th colspan="2"></th>
-                </tr>
-              </tbody>
-            </table>
+                  <tr>
+                    <th colspan="2"></th>
+                  </tr>
+                </tbody>
+              </table>
 
-            <div
-                v-if="payment_status == 'NOT PAID'"
-              class="btn btn-block btn-outline-primary mt-5"
-              @click="backToPaymentOption"
-            >Back to Payment Options</div>
-          </div>
-          <div class="col-sm-8" style="border-left:1px solid #ddd ">
-            <h4>TARIKH TEMUJANJI</h4>
-            <h3>10 April 2019 (Petang)</h3>
-            <qrcode
-                v-if="payment_status == 'PAID'"
-              :value="qrtoken"
-              :options="{ width: 400 }"
-            ></qrcode>
-            <div class='' v-if="payment_status == 'PAID'">
-                <div class="btn btn-outline-primary">Save Ticket</div>
-                <div class="btn btn-outline-primary ml-1">Print Ticket</div>
-                </div>
+              <div
+                  v-if="payment_status == 'NOT PAID'"
+                class="btn btn-block btn-outline-primary mt-5"
+                @click="backToPaymentOption"
+              >Back to Payment Options</div>
+            </div>
+            <div class="col-sm-8" style="border-left:1px solid #ddd ">
+              <h4>TARIKH TEMUJANJI</h4> 
+              <h3>{{ appointment_slot }} ({{ appointment_session }})</h3>
+              <qrcode
+                  v-if="payment_status == 'PAID'"
+                :value="qrtoken"
+                :options="{ width: 400 }"
+              ></qrcode>
+            </div>
           </div>
         </div>
       </div>
+
+      
     </div>
+    <div class='mt-2 mb-5' v-if="payment_status == 'PAID'">
+              <div class="btn btn-block btn-primary" @click="download">Save Ticket</div>
+            </div>
   </div>
 </template>
 
@@ -89,6 +92,9 @@
 // import PaymentStatus from "@/components/PaymentStatus";
 import VueQrcode from "@chenfengyuan/vue-qrcode";
 import Axios from "axios";
+import { API } from '../config'
+import jsPDF from "jspdf";
+import html2canvas from 'html2canvas'
 
 export default {
   name: "callback",
@@ -100,6 +106,8 @@ export default {
       payment_status: "",
       billplz: "",
       info: {},
+      appointment_slot: "",
+      appointment_session: "",
       qrtoken: 'no-access'
     };
   },
@@ -131,7 +139,7 @@ export default {
             status: 'paid'
         }
       Axios
-      .post("http://54.255.249.228/pulkam/register/CompleteProcess/", {
+      .post( API.baseurl + "register/CompleteProcess/", {
         headers: {
           "Content-Type": "application/json",
           "cache-control": "no-cache"
@@ -142,9 +150,25 @@ export default {
           this.qrtoken = response.data.response.token
       })
     },
+    updateBillPlz: function(id){
+      Axios.post(API.baseurl + "koleksi/billplz-payment-info", {
+        headers: {
+          'accept':'application/json'
+        },
+        body: {
+          billplz_id: id,
+          paid_status: "true"
+        }
+      })
+      .then(response => {
+        let resp = response.data.response
+        this.appointment_slot = resp.appointment_slot
+        this.appointment_session = resp.appointment_session
+      })
+    },
     fetchBillplzInfo: function(id) {
       Axios.get(
-        "http://54.255.249.228/pulkam/register/BillPlzInfo?billplz_id=" + id
+        API.baseurl + "register/BillPlzInfo?billplz_id=" + id
       ).then(response => {
         let resp = response.data.response;
         this.info = resp.data_pemohon;
@@ -153,7 +177,8 @@ export default {
         this.info.register_id = resp.register_id;
         this.info.temporary_id = resp.temporary_id;
         if(this.payment_status=='PAID'){
-            this.generateQrCode();
+            this.generateQrCode()
+            this.updateBillPlz(id)
         }
       });
     },
@@ -164,6 +189,17 @@ export default {
           register_id: this.info.register_id,
           temporary_id: this.info.temporary_id
         }
+      });
+    },
+    download: function() {
+      const doc = new jsPDF('l', 'mm',[595,295]);
+      var canvasElement = document.createElement("canvas");
+      html2canvas(this.$refs.content, { canvas: canvasElement })
+      .then(function(canvas) {
+        const img = canvas.toDataURL("image/png");
+        // doc.addImage(img, "JPEG", 5, 5,200,95);
+        doc.addImage(img,'JPEG',5,5,200,95,'NONE')
+        doc.save("sample.pdf");
       });
     }
   }

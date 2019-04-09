@@ -1,17 +1,7 @@
 <template>
   <div class="container">
-    <div class="text-center mt-5 mb-4">
-      <h1>Payment Instruction</h1>
-      <h4>Pulkam 2019</h4>
-      <ul class="list-inline">
-        <li class="list-inline-item">payment@pulkam2019.com.my</li>
-        <li class="list-inline-item">|</li>
-        <li class="list-inline-item">Pulang Kampung 2019</li>
-        <li class="list-inline-item">|</li>
-        <li class="list-inline-item">03 3122 4241</li>
-      </ul>
-    </div>
-    <div class="card-group mb-5">
+    <AppHeader title="Payment Instruction" subHeader="Pulkam 2019" />
+    <div class="card-group mb-5 card-shadow">
       <div class="card col-sm-4" style="padding:0">
         <div class="card-body text-left">
           <h3>Invoice Summary</h3>
@@ -155,14 +145,14 @@
             @click="proceedToPayment"
             class="btn btn-primary btn-block"
             id="proceed_payment"
-          >Continue to Payment</div>
+          >{{ next_button }}</div>
         </div>
       </div>
     </div>
   </div>
 </template>
 
-<style>
+<style scoped src="@/assets/css/main.css">
 .payment_items > .card {
   cursor: pointer;
 }
@@ -171,15 +161,21 @@
 <script>
 // @ is an alias to /src
 import Axios from "axios";
+import AppHeader from "@/components/AppHeader"
+require("@/assets/css/main.css")
 
 export default {
   name: "payment",
+  components: {
+    AppHeader
+  },
   data() {
     return {
       active_el: "billplz",
       billplz_id: "",
       billplz_url: "",
       payment_link: "billplz",
+      next_button: 'Continue to Payment',
       info: {
         pemohon_id: "",
         name: "",
@@ -193,7 +189,7 @@ export default {
   },
   mounted() {
     Axios.get(
-      "http://54.255.249.228/pulkam/register/info?regid=" +
+      "http://localhost/pulkam-api/register/info?regid=" +
         this.$route.params.register_id +
         "&tempid=" +
         this.$route.params.temporary_id
@@ -210,7 +206,6 @@ export default {
       }
     });
   },
-  components: {},
   methods: {
     pickBankTransfer: function() {
       this.active_el = "bank_transfer";
@@ -229,6 +224,7 @@ export default {
     proceedToPayment: function() {
       if (this.payment_link == "billplz") {
         if (this.billplz_id == "") {
+          this.next_button = 'Please wait...'
           let body = {
             register_id: this.$route.params.register_id,
             temporary_id: this.$route.params.temporary_id,
@@ -236,14 +232,14 @@ export default {
             email: this.info.email,
             nama: this.info.name
           };
-          Axios.post("http://54.255.249.228/pulkam/register/BillPlz/", {
+          Axios.post("http://localhost/pulkam-api/register/BillPlz/", {
             headers: {
               "Content-Type": "application/json",
               "cache-control": "no-cache"
             },
             body: body
           }).then(response => {
-            console.log(response.data);
+            window.location.href = response.data.response.url
           });
         } else {
           window.location.href = this.billplz_url

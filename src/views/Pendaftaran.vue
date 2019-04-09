@@ -1,18 +1,8 @@
 <template>
   <div class="container mb-3">
-    <div class="text-center mt-5 mb-4">
-      <h1>Registration Form</h1>
-      <h4>Pulkam 2019</h4>
-      <ul class="list-inline">
-        <li class="list-inline-item">payment@pulkam2019.com.my</li>
-        <li class="list-inline-item">|</li>
-        <li class="list-inline-item">Pulang Kampung 2019</li>
-        <li class="list-inline-item">|</li>
-        <li class="list-inline-item">03 3122 4241</li>
-      </ul>
-    </div>
+    <AppHeader title="Registration Form" subHeader="Pulkam 2019"/>
     <form id="borang_daftar" @submit.prevent="getFormValues">
-      <div class="card mb-2">
+      <div class="card mb-3 card-shadow">
         <div class="card-header text-left text-uppercase">MAKLUMAT PERIBADI</div>
         <div class="card-body">
           <div class="row text-left">
@@ -26,10 +16,8 @@
                   type="text"
                   name="nama"
                   v-model="info.nama"
-                  id
                   class="form-control text-uppercase"
-                  placeholder
-                  aria-describedby="helpId"
+                  required
                   autocomplete="off"
                 >
               </div>
@@ -214,7 +202,7 @@
                   Email
                   <i class="fas fa-pencil-paintbrush"></i>
                 </label>
-                <input type="email" name="email" v-model="info.email" class="form-control">
+                <input type="email" name="email" v-model="info.email" class="form-control" required>
               </div>
             </div>
 
@@ -230,6 +218,8 @@
                   v-model="info.no_telefon"
                   class="form-control text-uppercase"
                   autocomplete="off"
+                  required
+                  @keypress="onlyNumber"
                 >
               </div>
             </div>
@@ -237,7 +227,7 @@
         </div>
       </div>
 
-      <div class="card mb-2">
+      <div class="card mb-3 card-shadow">
         <div class="card-header text-left">
           <div>Maklumat Pasport perjalanan / dokumen perjalanan</div>
           <div>
@@ -317,7 +307,7 @@
         </div>
       </div>
 
-      <div class="card mb-2">
+      <div class="card mb-3 card-shadow">
         <div class="card-header text-left">
           <div>Butir - butir penganjur di malaysia</div>
           <div>
@@ -412,7 +402,7 @@
         </div>
       </div>
 
-      <div class="card">
+      <div class="card card-shadow">
         <div class="card-header text-left">
           <div>butir - butir permohonan</div>
           <div>
@@ -565,7 +555,7 @@
       <div class="row">
         <div class="col-12 mt-4">
           <div class="form-group">
-            <button type="submit" class="btn btn-block btn-primary">SETERUSNYA</button>
+            <button type="submit" class="btn btn-block btn-primary">{{ button.next }}</button>
           </div>
         </div>
       </div>
@@ -573,13 +563,19 @@
   </div>
 </template>
 
+<style scoped src='@/assets/css/main.css'>
+</style>
+
+
 <script>
-// @ is an alias to /src
-// import HelloWorld from "@/components/HelloWorld.vue";
+import AppHeader from "@/components/AppHeader";
 import Datepicker from "vuejs-datepicker";
 import Vue from "vue";
 import DisableAutocomplete from "vue-disable-autocomplete";
-import axios from "axios";
+import Axios from "axios";
+import { API } from "../config";
+import Swal from "sweetalert2";
+require('@/assets/css/main.css')
 
 Vue.use(DisableAutocomplete);
 
@@ -587,8 +583,16 @@ export default {
   name: "pendaftaran",
   data: function() {
     return {
+      mode: "baru",
+      ref: {
+        register_id: "",
+        temporary_id: ""
+      },
       placeholder: {
         nombor: "NOMBOR PASSPORT"
+      },
+      button: {
+        next: "Seterusnya"
       },
       options: {
         negara: [
@@ -640,24 +644,44 @@ export default {
     };
   },
   components: {
-    datepicker: Datepicker
+    datepicker: Datepicker,
+    AppHeader
+  },
+  mounted() {
+    if (this.$route.query.rid && this.$route.query.tid) {
+      this.ref.register_id = this.$route.query.rid;
+      this.ref.temporary_id = this.$route.query.tid;
+      Axios.get(
+        API.baseurl +
+          "register/info?regid=" +
+          this.$route.query.rid +
+          "&tempid=" +
+          this.$route.query.tid
+      ).then(response => {
+        this.mode = "edit";
+        let resp = response.data.response;
+        this.button.next = "Kemaskini dan Seterusnya";
+        this.info = resp.data_pemohon;
+      });
+    }
   },
   methods: {
     getFormValues: function() {
-      axios
-        .post("http://54.255.249.228/pulkam/register/new", {
+      if (this.mode == "baru") {
+        Axios.post(API.baseurl + "register/new", {
           headers: {
             "Content-Type": "application/json",
             "cache-control": "no-cache"
           },
           body: this.info
-        })
-        .then(response => {
+        }).then(response => {
           let resp = response.data.response;
           window.location.href =
             "./payment/" + resp.register_id + "/" + resp.temporary_id;
-          // window.location.href = 'https://www.billplz.com/bills/laeplfgz'
         });
+      } else {
+        this.kemaskiniMaklumat();
+      }
     },
     changeNomborPlaceholder: function() {
       let dokumen = this.info.jenis_dokumen_perjalanan;
@@ -668,6 +692,51 @@ export default {
         case "SPLP":
           this.placeholder.nombor = "NOMBOR SPLP";
       }
+    },
+    onlyNumber($event) {
+      let keyCode = $event.keyCode ? $event.keyCode : $event.which;
+      if ((keyCode < 48 || keyCode > 57) && keyCode !== 46) {
+        $event.preventDefault();
+      }
+    },
+    kemaskiniMaklumat: function() {
+      Axios.post(API.baseurl + "register/updateinfo", {
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: {
+          input: this.info,
+          ref: this.ref
+        }
+      }).then(response => {
+        let resp = response.data.response;
+        if (resp.payment.status == "paid") {
+          Swal.fire({
+            title: "Success!",
+            text: "Compound has been paid",
+            type: "success",
+            confirmButtonText: "View ticket"
+          }).then(()=>{
+            this.$router.push({
+              name:'ticket',
+              params: {
+                register_id: resp.register_id,
+                temporary_id: resp.temporary_id
+              }
+            })
+          });
+        } else {
+          Swal.fire({
+            title: "Success!",
+            text: "Personal particular has been updated!",
+            type: "success",
+            confirmButtonText: "Proceed to payment options!"
+          }).then(function() {
+            window.location.href =
+              "./payment/" + resp.register_id + "/" + resp.temporary_id;
+          });
+        }
+      });
     },
     radioTujuanPerjalanan: function() {
       // let tujuan = this.info.tujuan_perjalanan;

@@ -1,17 +1,8 @@
 <template>
   <div class="container">
-    <div class="text-center mt-5 mb-4">
-      <h1>Payment Instruction</h1>
-      <h4>Pulkam 2019</h4>
-      <ul class="list-inline">
-        <li class="list-inline-item">payment@pulkam2019.com.my</li>
-        <li class="list-inline-item">|</li>
-        <li class="list-inline-item">Pulang Kampung 2019</li>
-        <li class="list-inline-item">|</li>
-        <li class="list-inline-item">03 3122 4241</li>
-      </ul>
-    </div>
-    <div class="card h-100">
+    <AppHeader title="Payment Instruction" subHeader="Pulkam 2019" />
+    <div class="card h-100 card-shadow">
+      <form @submit.prevent="kemaskiniPembayaran">
       <div class="card-header">Instruction</div>
       <div class="card-body">
         <div class="card-deck h-100">
@@ -50,19 +41,18 @@
             <div class="card-body">
               <h5 class="card-title">Langkah 3</h5>
               <hr>
-              <div class="btn btn-outline-primary">Save Ticket</div>
               <p class="card-text">Sila kemaskini maklumat transaksi anda disini</p>
-              <div class="btn btn-primary btn-block">Kemaksini Transaksi</div>
             </div>
           </div>
         </div>
+
 
         <div class="card-deck h-100 mt-3">
           <div class="card">
             <div class="card-body">
               <h5 class="card-title">Butir-Butir Pembayaran</h5>
               <hr>
-              <form action>
+              
                 <div class="row text-left">
                   <div class="col-sm-12 col-md-4 text-left">
                     <div class="form-group">
@@ -75,6 +65,8 @@
                         name="nama_penuh_penaja"
                         v-model="info.cdm_id"
                         class="form-control text-uppercase"
+                        autocomplete="off"
+                        required
                       >
                     </div>
                   </div>
@@ -87,9 +79,11 @@
                       </label>
                       <input
                         type="text"
-                        name="info.no_seq"
-                        v-model="info.nama_penuh_penaja"
+                        name="no_seq"
+                        v-model="info.no_seq"
                         class="form-control text-uppercase"
+                        autocomplete="off"
+                        required
                       >
                     </div>
                   </div>
@@ -102,15 +96,16 @@
                       </label>
                       <datepicker
                         bootstrap-styling
-                        name="info.tarikh_bayaran"
-                        v-model="info.sah_sehingga"
+                        name="tarikh_bayaran"
+                        v-model="info.tarikh_bayaran"
                         calendar-button
                         calendar-button-icon="far fa-calendar-alt"
+                        required
                       ></datepicker>
                     </div>
                   </div>
                 </div>
-              </form>
+              
             </div>
           </div>
         </div>
@@ -118,21 +113,27 @@
 
       <div class="card-footer bg-transparent text-center">
         <div class="btn btn-outline-primary" @click="backToPaymentOption">Back to Payment Options</div>
-        <div class="btn btn-primary ml-2" @click="kemaskiniPembayaran">Kemaskini Pembayaran</div>
+        <button type="submit" class="btn btn-primary ml-2">Kemaskini Pembayaran</button>
       </div>
+
+      </form>
     </div>
   </div>
 </template>
 
-<style>
+<style scoped src="@/assets/css/main.css">
 .payment_items > .card {
   cursor: pointer;
 }
 </style>
 
 <script>
-// @ is an alias to /src
+import AppHeader from "@/components/AppHeader"
 import Datepicker from "vuejs-datepicker";
+import {API} from '../config';
+import Axios from 'axios';
+import Swal from "sweetalert2";
+require("@/assets/css/main.css")
 
 export default {
   name: "payment_bank_transfer",
@@ -140,18 +141,18 @@ export default {
     return {
       active_el: "billplz",
       info: {
-        name: "",
-        email: "",
-        invoice_date: "",
         total_invoice: "800.00",
-        payment_gateway_charges: "1.50",
-        amount_to_be_paid: "801.50"
+        payment_gateway_charges: "0.0",
+        amount_to_be_paid: "800.00",
+        register_id: this.$route.params.register_id,
+        temporary_id: this.$route.params.temporary_id
       }
     };
   },
   mounted() {},
   components: {
-    Datepicker: Datepicker
+    Datepicker: Datepicker,
+    AppHeader
   },
   methods: {
     backToPaymentOption: function() {
@@ -160,12 +161,30 @@ export default {
       });
     },
     kemaskiniPembayaran: function(){
-      this.$router.push({
-        name: 'payment_bt',
-        params: {
-          register_id: this.$route.params.register_id,
-          temporary_id: this.$route.params.temporary_id
-        }
+      console.log(this.info)
+      Axios
+      .post(API.baseurl + 'register/update-cdm',{
+        headers: {
+          'accept':'application/json'
+        },
+        body: this.info
+      })
+      .then(response => {
+        console.log(response)
+        Swal.fire({
+            title: "Success!",
+            text: "Compound has been paid",
+            type: "success",
+            confirmButtonText: "View ticket"
+          }).then(()=>{
+            this.$router.push({
+              name:'ticket',
+              params: {
+                register_id: this.info.register_id,
+                temporary_id: this.info.temporary_id
+              }
+            })
+          });
       })
     }
   }
