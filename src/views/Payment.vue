@@ -162,6 +162,7 @@
 // @ is an alias to /src
 import Axios from "axios";
 import AppHeader from "@/components/AppHeader"
+import { API } from "@/config"
 require("@/assets/css/main.css")
 
 export default {
@@ -188,8 +189,7 @@ export default {
     };
   },
   mounted() {
-    Axios.get(
-      "http://localhost/pulkam-api/register/info?regid=" +
+    Axios.get( API.baseurl + "register/info?regid=" +
         this.$route.params.register_id +
         "&tempid=" +
         this.$route.params.temporary_id
@@ -232,7 +232,7 @@ export default {
             email: this.info.email,
             nama: this.info.name
           };
-          Axios.post("http://localhost/pulkam-api/register/BillPlz/", {
+          Axios.post(API.baseurl + "register/BillPlz/", {
             headers: {
               "Content-Type": "application/json",
               "cache-control": "no-cache"
@@ -245,13 +245,7 @@ export default {
           window.location.href = this.billplz_url
         }
       } else {
-        this.$router.push({
-          name: "payment_bank_transfer",
-          params: {
-            register_id: this.$route.params.register_id,
-            temporary_id: this.$route.params.temporary_id
-          }
-        });
+        window.location.href = '/payment_bank_transfer/' + this.$route.params.register_id + '/' + this.$route.params.temporary_id
       }
     }
   }

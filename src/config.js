@@ -1,10 +1,10 @@
 var env = {
     production: {
-        baseurl: 'https://xxx'
+        baseurl: 'http://54.255.249.228/pulkam/'
     },
     development: {
         baseurl: 'http://localhost/pulkam-api/'
     }
 }
 
-export const API = env.development
+export const API = env.production

@@ -307,7 +307,7 @@
         </div>
       </div>
 
-      <div class="card mb-3 card-shadow">
+      <div class="card mb-3 card-shadow d-none">
         <div class="card-header text-left">
           <div>Butir - butir penganjur di malaysia</div>
           <div>
@@ -402,7 +402,7 @@
         </div>
       </div>
 
-      <div class="card card-shadow">
+      <div class="card card-shadow d-none">
         <div class="card-header text-left">
           <div>butir - butir permohonan</div>
           <div>

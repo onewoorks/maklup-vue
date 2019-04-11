@@ -6,8 +6,7 @@
       <div class="col-sm-12 col-md-6">
         <div class="card h-100" @click="goToPendaftaran">
           <div class="card-body">
-              <h3>Pendaftaran Baru</h3>
-                {{ test}}
+                <h3>Pendaftaran Baru</h3>
               </div>
         </div>
       </div>
@@ -63,9 +62,10 @@ export default {
   },
   methods: {
     goToPendaftaran: function() {
-      this.$router.push({
-        name: "pendaftaran"
-      });
+      // this.$router.push({
+
+      // })
+      window.location.href = './pendaftaran'
     },
     submitFormKemaskini: function() {
       Axios
