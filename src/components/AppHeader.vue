@@ -4,7 +4,7 @@
       <h1>{{ title }}</h1>
       <h4>{{ subHeader }}</h4>
       <ul class="list-inline">
-        <li class="list-inline-item">payment@pulkam2019.com.my</li>
+        <li class="list-inline-item">payment@pulkam.com.my</li>
         <li class="list-inline-item">|</li>
         <li class="list-inline-item">Pulang Kampung 2019</li>
         <li class="list-inline-item">|</li>

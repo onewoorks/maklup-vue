@@ -1,6 +1,6 @@
 <template>
   <div class="container mb-3">
-    <AppHeader title="Registration Form" subHeader="Pulkam 2019"/>
+    <AppHeader title="Borang Pendaftaran" subHeader="Pulkam 2019"/>
     <form id="borang_daftar" @submit.prevent="getFormValues">
       <div class="card mb-3 card-shadow">
         <div class="card-header text-left text-uppercase">MAKLUMAT PERIBADI</div>
@@ -212,7 +212,18 @@
                   No Telefon
                   <i class="fas fa-pencil-paintbrush"></i>
                 </label>
-                <input
+                <div class="row">
+                  <div class="col-6 pr-1">
+                    <select v-model="info.kod_negara" class="form-control text-uppercase">
+                  <option
+                    v-for="(option, key) in options.kod_negara"
+                    v-bind:key="key"
+                    v-bind:value="option.value"
+                  >{{ option.text }}</option>
+                </select>
+                  </div>
+                  <div class="col-6 pl-0">
+                    <input
                   type="text"
                   name="no_telefon"
                   v-model="info.no_telefon"
@@ -221,6 +232,9 @@
                   required
                   @keypress="onlyNumber"
                 >
+                  </div>
+                </div>
+                
               </div>
             </div>
           </div>
@@ -246,6 +260,7 @@
                 <select
                   v-model="info.jenis_dokumen_perjalanan"
                   class="form-control"
+                  required
                   @change="changeNomborPlaceholder"
                 >
                   <option value="PASSPORT">PASSPORT</option>
@@ -264,6 +279,7 @@
                   type="text"
                   name="nombor"
                   v-model="info.nombor"
+                  required
                   class="form-control text-uppercase"
                   :placeholder="placeholder.nombor"
                 >
@@ -293,6 +309,7 @@
                   <i class="fas fa-pencil-paintbrush"></i>
                 </label>
                 <datepicker
+                  required
                   bootstrap-styling
                   name="sah_sehingga"
                   v-model="info.sah_sehingga"
@@ -595,6 +612,25 @@ export default {
         next: "Seterusnya"
       },
       options: {
+        kod_negara: [
+          { text: "MALAYSIA (60)", value: "60"},
+          { text: "INDONESIA (62)", value: "62" },
+          { text: "BANGLADESH (880)", value: "880" },
+          { text: "MYANMAR (95)", value: "95" },
+          { text: "NEPAL (977)", value: "977" },
+          { text: "VIETNAM (84)", value: "84" },
+          { text: "THAILAND (66)", value: "66" },
+          { text: "LAOS (856)", value: "856" },
+          { text: "KEMBOJA (855)", value: "855" },
+          { text: "PHILIPINA (63)", value: "63" },
+          { text: "CHINA (86)", value: "86" },
+          { text: "INDIA (91)", value: "91" },
+          { text: "PAKISTAN (92)", value: "92" },
+          { text: "SRI LANKA (94)", value: "94" },
+          { text: "KAZAKHSTAN (7)", value: "7" },
+          { text: "UZBEKISTAN (998)", value: "998" },
+          { text: "TURKMENISTAN (993)", value: "993" }
+        ],
         negara: [
           { text: "INDONESIA", value: "INDONESIA" },
           { text: "BANGLADESH", value: "BANGLADESH" },
@@ -626,6 +662,7 @@ export default {
         alamat_3: "",
         taraf_perkahwinan: "BELUM BERKAHWIN",
         email: "",
+        kod_negara: "60",
         no_telefon: "",
         jenis_dokumen_perjalanan: "PASSPORT",
         nombor: "",
