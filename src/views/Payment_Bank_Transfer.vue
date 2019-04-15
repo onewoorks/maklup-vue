@@ -3,14 +3,14 @@
     <AppHeader title="Cara Pembayaran Melalui CDM" subHeader="Pulkam 2019"/>
     <div class="card h-100 card-shadow">
       <form @submit.prevent="kemaskiniPembayaran">
-        <div class="card-header">Instruction</div>
+        <div class="card-header">Langkah - Langkah Pembayaran</div>
         <div class="card-body">
           <div class="card-deck h-100">
             <div class="card">
               <div class="card-body">
                 <h5 class="card-title">Langkah 1</h5>
                 <hr>
-                <p class="card-text">Find Any Auto Teller Machine (ATM)</p>
+                <p class="card-text">Cari mana-mana mesin deposit tunai (ATM) mengikut bank pilihan anda.</p>
               </div>
             </div>
 
@@ -36,17 +36,17 @@
                   <div class="card-text text-left">
                     <ul class="list-unstyled">
                       <li>
-                        <b>Bank Account :</b> Maybank
+                        <b>Bank :</b> Maybank
                       </li>
                       <li>
-                        <b>Account No :</b> 562106689597
+                        <b>No akaun :</b> 562106689597
                       </li>
                       <li>
-                        <b>Account Holder :</b> Onewoorks Solutions
+                        <b>Pemilik akaun :</b> Onewoorks Solutions
                       </li>
                       <br>
                       <li>
-                        <b>Amount To Be Paid :</b>MYR 800.00
+                        <b>Jumlah yang perlu dibayar :</b>MYR 800.00
                       </li>
                     </ul>
                   </div>
@@ -55,17 +55,17 @@
                   <div class="card-text text-left">
                     <ul class="list-unstyled">
                       <li>
-                        <b>Bank Account :</b> CIMB
+                        <b>Bank :</b> CIMB
                       </li>
                       <li>
-                        <b>Account No :</b>
+                        <b>No Akaun :</b>
                       </li>
                       <li>
-                        <b>Account Holder :</b>
+                        <b>Pemilik Akaun :</b>
                       </li>
                       <br>
                       <li>
-                        <b>Amount To Be Paid :</b>MYR 800.00
+                        <b>Jumlah yang perlu dibayar :</b>MYR 800.00
                       </li>
                     </ul>
                   </div>
@@ -73,18 +73,18 @@
                 <div v-if="bankpilihan == 'bsn'">
                   <div class="card-text text-left">
                     <ul class="list-unstyled">
-                      <li>
-                        <b>Bank Account :</b> BSN
+                       <li>
+                        <b>Bank :</b> Bank Simpanan Nasinal (BSN)
                       </li>
                       <li>
-                        <b>Account No :</b>
+                        <b>No Akaun :</b>
                       </li>
                       <li>
-                        <b>Account Holder :</b>
+                        <b>Pemilik Akaun :</b>
                       </li>
                       <br>
                       <li>
-                        <b>Amount To Be Paid :</b>MYR 800.00
+                        <b>Jumlah yang perlu dibayar :</b>MYR 800.00
                       </li>
                     </ul>
                   </div>
@@ -416,7 +416,7 @@ export default {
         let resp = response.data.response
         console.log(resp)
         Swal.fire({
-          title: "Pembayaran Berjaya!",
+          title: "Pembayaran Sedang Diproses!",
           text: "Kompaun MYR 800.00 telah dibayar",
           type: "success",
           confirmButtonText: "Lihat Temujanji"
