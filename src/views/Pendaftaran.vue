@@ -19,6 +19,8 @@
                   class="form-control text-uppercase"
                   required
                   autocomplete="off"
+                  oninvalid="this.setCustomValidity('Sila masukkan nama penuh')"
+                  oninput="this.setCustomValidity('')"
                 >
               </div>
             </div>
@@ -77,17 +79,15 @@
 
             <div class="col-sm-6 text-left">
               <div class="form-group">
-                <label for>
-                  Tarikh Lahir
-                  <i class="fas fa-pencil-paintbrush"></i>
-                </label>
-                <datepicker
-                  bootstrap-styling
-                  name="tarikh_lahir"
-                  v-model="info.tarikh_lahir"
-                  calendar-button
-                  calendar-button-icon="far fa-calendar-alt"
-                ></datepicker>
+                <label for>Tarikh Lahir</label>
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">
+                      <i class="far fa-calendar-alt"></i>
+                    </span>
+                  </div>
+                  <DatePicker2 v-model="info.tarikh_lahir" :config="options.tarikh_sahaja" required></DatePicker2>
+                </div>
               </div>
             </div>
 
@@ -118,7 +118,7 @@
                   name="pekerjaan"
                   v-model="info.pekerjaan"
                   class="form-control text-uppercase"
-                  aria-describedby="helpId"
+                  autocomplete="off"
                 >
               </div>
             </div>
@@ -133,8 +133,8 @@
                   type="text"
                   name="alamat_1"
                   v-model="info.alamat_1"
-                  id
                   class="form-control text-uppercase"
+                  autocomplete="off"
                 >
               </div>
             </div>
@@ -145,8 +145,8 @@
                   type="text"
                   name="alamat_2"
                   v-model="info.alamat_2"
-                  id
                   class="form-control text-uppercase"
+                  autocomplete="off"
                 >
               </div>
             </div>
@@ -157,6 +157,7 @@
                   name="alamat_3"
                   v-model="info.alamat_3"
                   class="form-control text-uppercase"
+                  autocomplete="off"
                 >
               </div>
             </div>
@@ -215,26 +216,25 @@
                 <div class="row">
                   <div class="col-6 pr-1">
                     <select v-model="info.kod_negara" class="form-control text-uppercase">
-                  <option
-                    v-for="(option, key) in options.kod_negara"
-                    v-bind:key="key"
-                    v-bind:value="option.value"
-                  >{{ option.text }}</option>
-                </select>
+                      <option
+                        v-for="(option, key) in options.kod_negara"
+                        v-bind:key="key"
+                        v-bind:value="option.value"
+                      >{{ option.text }}</option>
+                    </select>
                   </div>
                   <div class="col-6 pl-0">
                     <input
-                  type="text"
-                  name="no_telefon"
-                  v-model="info.no_telefon"
-                  class="form-control text-uppercase"
-                  autocomplete="off"
-                  required
-                  @keypress="onlyNumber"
-                >
+                      type="text"
+                      name="no_telefon"
+                      v-model="info.no_telefon"
+                      class="form-control text-uppercase"
+                      autocomplete="off"
+                      required
+                      @keypress="onlyNumber"
+                    >
                   </div>
                 </div>
-                
               </div>
             </div>
           </div>
@@ -304,267 +304,23 @@
 
             <div class="col-sm-12 col-lg-6 text-left">
               <div class="form-group">
-                <label for>
-                  **Sah Sehingga
-                  <i class="fas fa-pencil-paintbrush"></i>
-                </label>
-                <datepicker
-                  required
-                  bootstrap-styling
-                  name="sah_sehingga"
-                  v-model="info.sah_sehingga"
-                  calendar-button
-                  calendar-button-icon="far fa-calendar-alt"
-                ></datepicker>
+                <label for>Sah Sehingga</label>
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">
+                      <i class="far fa-calendar-alt"></i>
+                    </span>
+                  </div>
+                  <DatePicker2 v-model="info.sah_sehingga" :config="options.tarikh_sah" required></DatePicker2>
+                </div>
               </div>
+            </div>
+
+            <div class="col-12">
+              
             </div>
 
             <div class="col-12 text-uppercase mb-4"></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="card mb-3 card-shadow d-none">
-        <div class="card-header text-left">
-          <div>Butir - butir penganjur di malaysia</div>
-          <div>
-            <i>particulars of sponsor in malaysia</i>
-          </div>
-        </div>
-        <div class="card-body">
-          <div class="row text-left">
-            <div class="col-sm-12 text-left">
-              <div class="form-group">
-                <label for>
-                  Nama Penuh
-                  <i class="fas fa-pencil-paintbrush"></i>
-                </label>
-                <input
-                  type="text"
-                  name="nama_penuh_penaja"
-                  v-model="info.nama_penuh_penaja"
-                  class="form-control text-uppercase"
-                >
-              </div>
-            </div>
-
-            <div class="col-sm-12 col-md-6 text-left">
-              <div class="form-group">
-                <label for>
-                  No Kad Pengenalan
-                  <i class="fas fa-pencil-paintbrush"></i>
-                </label>
-                <input
-                  type="text"
-                  name="kad_pengenalan_penaja"
-                  v-model="info.kad_pengenalan_penaja"
-                  class="form-control"
-                >
-              </div>
-            </div>
-
-            <div class="col-sm-12 col-md-6 text-left">
-              <div class="form-group">
-                <label for>
-                  No Telefon
-                  <i class="fas fa-pencil-paintbrush"></i>
-                </label>
-                <input
-                  type="text"
-                  name="no_telefon_penaja"
-                  v-model="info.no_telefon_penaja"
-                  class="form-control"
-                >
-              </div>
-            </div>
-
-            <div class="col-sm-12 text-left">
-              <div class="form-group mb-1">
-                <label for>
-                  Alamat
-                  <i class="fas fa-pencil-paintbrush"></i>
-                </label>
-                <input
-                  type="text"
-                  name="alamat_penaja_1"
-                  v-model="info.alamat_penaja_1"
-                  class="form-control text-uppercase"
-                >
-              </div>
-            </div>
-
-            <div class="col-sm-12 text-left">
-              <div class="form-group mb-1">
-                <input
-                  type="text"
-                  name="alamat_penaja_2"
-                  v-model="info.alamat_penaja_2"
-                  id
-                  class="form-control text-uppercase"
-                >
-              </div>
-            </div>
-
-            <div class="col-sm-12 text-left">
-              <div class="form-group">
-                <input
-                  type="text"
-                  name="alamat_penaja_3"
-                  v-model="info.alamat_penaja_3"
-                  class="form-control text-uppercase"
-                >
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="card card-shadow d-none">
-        <div class="card-header text-left">
-          <div>butir - butir permohonan</div>
-          <div>
-            <i>detail off application</i>
-          </div>
-        </div>
-        <div class="card-body">
-          <div class="row text-left">
-            <div class="col-sm-12 col-lg-6 text-left">
-              <div class="form-group">
-                <label for>
-                  Tempoh Tinggal Yang Dicadangkan Bulan
-                  <i class="fas fa-pencil-paintbrush"></i>
-                </label>
-                <div class="input-group">
-                  <input
-                    type="text"
-                    name="tempoh_tinggaL_yang_dicadangkan"
-                    v-model="info.tempoh_tinggaL_yang_dicadangkan"
-                    class="form-control"
-                  >
-                  <div class="input-group-append">
-                    <span class="input-group-text" id="basic-addon2">bulan</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="col-sm-12 col-lg-6 text-left">
-              <div class="form-group">
-                <label for>
-                  Tujuan Perjalanan
-                  <i class="fas fa-pencil-paintbrush"></i>
-                </label>
-                <div class="form-check">
-                  <label class="form-check-label">
-                    <input
-                      type="radio"
-                      class="form-check-input"
-                      value="Bercuti"
-                      name="tujuan_perjalanan"
-                      v-model="info.tujuan_perjalanan"
-                      @change="radioTujuanPerjalanan"
-                    >Bercuti
-                  </label>
-                </div>
-                <div class="form-check">
-                  <label class="form-check-label">
-                    <input
-                      type="radio"
-                      class="form-check-input"
-                      value="urusan perniagaan"
-                      name="tujuan_perjalanan"
-                      v-model="info.tujuan_perjalanan"
-                      @change="radioTujuanPerjalanan"
-                    >Urusan Perniagaan
-                  </label>
-                </div>
-                <div class="form-check">
-                  <label class="form-check-label">
-                    <input
-                      type="radio"
-                      class="form-check-input"
-                      value="melawat saudara mara / kawan"
-                      name="tujuan_perjalanan"
-                      v-model="info.tujuan_perjalanan"
-                      @change="radioTujuanPerjalanan"
-                    >Melawat Saudara Mara / Kawan
-                  </label>
-                </div>
-                <div class="form-check">
-                  <label class="form-check-label">
-                    <input
-                      type="radio"
-                      class="form-check-input"
-                      value="bekerja"
-                      name="tujuan_perjalanan"
-                      v-model="info.tujuan_perjalanan"
-                      @change="radioTujuanPerjalanan"
-                    >Bekerja
-                  </label>
-                </div>
-                <div class="form-check">
-                  <label class="form-check-label">
-                    <input
-                      type="radio"
-                      class="form-check-input"
-                      value="transit"
-                      v-model="info.tujuan_perjalanan"
-                      name="tujuan_perjalanan"
-                      @change="radioTujuanPerjalanan"
-                    >Transit
-                  </label>
-                </div>
-                <div class="form-check">
-                  <label class="form-check-label">
-                    <input
-                      type="radio"
-                      class="form-check-input"
-                      value="urusan rasmi"
-                      name="tujuan_perjalanan"
-                      v-model="info.tujuan_perjalanan"
-                      @change="radioTujuanPerjalanan"
-                    >Urusan Rasmi
-                  </label>
-                </div>
-                <div class="form-check">
-                  <label class="form-check-label">
-                    <input
-                      type="radio"
-                      class="form-check-input"
-                      value="persidangan"
-                      name="tujuan_perjalanan"
-                      v-model="info.tujuan_perjalanan"
-                      @change="radioTujuanPerjalanan"
-                    >Persidangan
-                  </label>
-                </div>
-                <div class="form-check">
-                  <label class="form-check-label">
-                    <input
-                      type="radio"
-                      class="form-check-input"
-                      value="lain-lain"
-                      name="tujuan_perjalanan"
-                      v-model="info.tujuan_perjalanan"
-                      @change="radioTujuanPerjalanan"
-                    >Lain-lain
-                  </label>
-                </div>
-
-                <div v-if="info.tujuan_perjalanan == 'lain-lain' " class="form-group">
-                  <label for>
-                    Lain - lain (Nyatakan)
-                    <i class="fas fa-pencil-paintbrush"></i>
-                  </label>
-                  <input
-                    type="text"
-                    name="tujuan_perjalanan_lain"
-                    v-model="info.tujuan_perjalanan_lain"
-                    class="form-control"
-                  >
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </div>
@@ -586,15 +342,14 @@
 
 <script>
 import AppHeader from "@/components/AppHeader";
-import Datepicker from "vuejs-datepicker";
-import Vue from "vue";
-import DisableAutocomplete from "vue-disable-autocomplete";
 import Axios from "axios";
 import { API } from "../config";
 import Swal from "sweetalert2";
-require('@/assets/css/main.css')
+import moment from "moment"
+import DatePicker2 from "vue-bootstrap-datetimepicker";
+import "pc-bootstrap4-datetimepicker/build/css/bootstrap-datetimepicker.css";
 
-Vue.use(DisableAutocomplete);
+require("@/assets/css/main.css");
 
 export default {
   name: "pendaftaran",
@@ -612,8 +367,16 @@ export default {
         next: "Seterusnya"
       },
       options: {
+        tarikh_sahaja: {
+          format: "D MMMM YYYY",
+          maxDate: new Date()
+        },
+        tarikh_sah: {
+          format: "D MMMM YYYY",
+          minDate: new Date(),
+        },
         kod_negara: [
-          { text: "MALAYSIA (60)", value: "60"},
+          { text: "MALAYSIA (60)", value: "60" },
           { text: "INDONESIA (62)", value: "62" },
           { text: "BANGLADESH (880)", value: "880" },
           { text: "MYANMAR (95)", value: "95" },
@@ -654,7 +417,7 @@ export default {
         nama: "",
         jantina: "LELAKI",
         tempat_lahir: "INDONESIA",
-        tarikh_lahir: "",
+        tarikh_lahir: moment(new Date, 'YYYY-MM-DD').format('D MMMM YYYY'),
         warganegara: "INDONESIA",
         pekerjaan: "",
         alamat_1: "",
@@ -667,21 +430,12 @@ export default {
         jenis_dokumen_perjalanan: "PASSPORT",
         nombor: "",
         negara_dikeluarkan: "INDONESIA",
-        sah_sehingga: "",
-        nama_penuh_penaja: "",
-        kad_pengenalan_penaja: "",
-        no_telefon_penaja: "",
-        alamat_penaja_1: "",
-        alamat_penaja_2: "",
-        alamat_penaja_3: "",
-        tempoh_tinggaL_yang_dicadangkan: "",
-        tujuan_perjalanan: "Bercuti",
-        tujuan_perjalanan_lain: ""
+        sah_sehingga: ""
       }
     };
   },
   components: {
-    datepicker: Datepicker,
+    DatePicker2,
     AppHeader
   },
   mounted() {
@@ -753,14 +507,14 @@ export default {
             text: "Compound has been paid",
             type: "success",
             confirmButtonText: "View ticket"
-          }).then(()=>{
+          }).then(() => {
             this.$router.push({
-              name:'ticket',
+              name: "ticket",
               params: {
                 register_id: resp.register_id,
                 temporary_id: resp.temporary_id
               }
-            })
+            });
           });
         } else {
           Swal.fire({
@@ -774,12 +528,6 @@ export default {
           });
         }
       });
-    },
-    radioTujuanPerjalanan: function() {
-      // let tujuan = this.info.tujuan_perjalanan;
-      // if (tujuan == "lain-lain") {
-      // } else {
-      // }
     }
   }
 };

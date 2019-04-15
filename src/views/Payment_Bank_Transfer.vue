@@ -1,60 +1,106 @@
 <template>
   <div class="container">
-    <AppHeader title="Payment Instruction" subHeader="Pulkam 2019" />
+    <AppHeader title="Cara Pembayaran Melalui CDM" subHeader="Pulkam 2019"/>
     <div class="card h-100 card-shadow">
       <form @submit.prevent="kemaskiniPembayaran">
-      <div class="card-header">Instruction</div>
-      <div class="card-body">
-        <div class="card-deck h-100">
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">Langkah 1</h5>
-              <hr>
-              <p class="card-text">Find Any Auto Teller Machine (ATM)</p>
+        <div class="card-header">Instruction</div>
+        <div class="card-body">
+          <div class="card-deck h-100">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title">Langkah 1</h5>
+                <hr>
+                <p class="card-text">Find Any Auto Teller Machine (ATM)</p>
+              </div>
             </div>
-          </div>
 
-          <div class="card">
-            <div class="card-body h-100">
-              <h5 class="card-title">Langkah 2</h5>
-              <hr>
-              <div class="card-text text-left">
-                <ul class="list-unstyled">
-                  <li>
-                    <b>Bank Account :</b> Maybank
-                  </li>
-                  <li>
-                    <b>Account No :</b> 562106689597
-                  </li>
-                  <li>
-                    <b>Account Holder :</b> Onewoorks Solutions
-                  </li>
-                  <br>
-                  <li>
-                    <b>Amount To Be Paid :</b>MYR 800.00
-                  </li>
-                </ul>
+            <div class="card">
+              <div class="card-body h-100">
+                <h5 class="card-title">Langkah 2</h5>
+                <hr>
+
+                <select class="form-control mb-3" v-model="bankpilihan" @change="pilihBankAnda">
+                  <option value>-- Pilih Bank --</option>
+                  <option value="maybank">Maybank</option>
+                  <option value="cimb">CIMB</option>
+                  <option value="bsn">Bank Simpanan Nasional (BSN)</option>
+                </select>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title">Langkah 3</h5>
+                <hr>
+
+                <div v-if="bankpilihan == 'maybank'">
+                  <div class="card-text text-left">
+                    <ul class="list-unstyled">
+                      <li>
+                        <b>Bank Account :</b> Maybank
+                      </li>
+                      <li>
+                        <b>Account No :</b> 562106689597
+                      </li>
+                      <li>
+                        <b>Account Holder :</b> Onewoorks Solutions
+                      </li>
+                      <br>
+                      <li>
+                        <b>Amount To Be Paid :</b>MYR 800.00
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+                <div v-if="bankpilihan == 'cimb'">
+                  <div class="card-text text-left">
+                    <ul class="list-unstyled">
+                      <li>
+                        <b>Bank Account :</b> CIMB
+                      </li>
+                      <li>
+                        <b>Account No :</b>
+                      </li>
+                      <li>
+                        <b>Account Holder :</b>
+                      </li>
+                      <br>
+                      <li>
+                        <b>Amount To Be Paid :</b>MYR 800.00
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+                <div v-if="bankpilihan == 'bsn'">
+                  <div class="card-text text-left">
+                    <ul class="list-unstyled">
+                      <li>
+                        <b>Bank Account :</b> BSN
+                      </li>
+                      <li>
+                        <b>Account No :</b>
+                      </li>
+                      <li>
+                        <b>Account Holder :</b>
+                      </li>
+                      <br>
+                      <li>
+                        <b>Amount To Be Paid :</b>MYR 800.00
+                      </li>
+                    </ul>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">Langkah 3</h5>
-              <hr>
-              <p class="card-text">Sila kemaskini maklumat transaksi anda disini</p>
-            </div>
-          </div>
-        </div>
 
+          <div v-if="bankpilihan == 'maybank' " class="card-deck h-100 mt-3">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title text-left">Butir-Butir Pembayaran Maybank</h5>
+                <hr>
 
-        <div class="card-deck h-100 mt-3">
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">Butir-Butir Pembayaran</h5>
-              <hr>
-              
                 <div class="row text-left">
-                  <div class="col-sm-12 col-md-4 text-left">
+                  <div class="col-sm-12 col-md-3 text-left">
                     <div class="form-group">
                       <label for>
                         No CDM ID
@@ -71,7 +117,7 @@
                     </div>
                   </div>
 
-                  <div class="col-sm-12 col-md-4 text-left">
+                  <div class="col-sm-12 col-md-3 text-left">
                     <div class="form-group">
                       <label for>
                         No SEQ No
@@ -88,34 +134,218 @@
                     </div>
                   </div>
 
-                  <div class="col-sm-12 col-md-4 text-left">
+                  <div class="col-sm-12 col-md-3 text-left">
                     <div class="form-group">
-                      <label for>
-                        Tarikh Bayaran
-                        <i class="fas fa-pencil-paintbrush"></i>
-                      </label>
-                      <datepicker
-                        bootstrap-styling
-                        name="tarikh_bayaran"
-                        v-model="info.tarikh_bayaran"
-                        calendar-button
-                        calendar-button-icon="far fa-calendar-alt"
-                        required
-                      ></datepicker>
+                      <label for>Tarikh Bayaran</label>
+                      <div class="input-group">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text">
+                            <i class="far fa-calendar-alt"></i>
+                          </span>
+                        </div>
+                        <Datepicker
+                          v-model="info.tarikh_bayaran"
+                          :config="options.tarikh_bayaran"
+                          required
+                        ></Datepicker>
+                      </div>
                     </div>
                   </div>
+
+                  <div class="col-sm-12 col-md-3 text-left">
+                    <div class="form-group">
+                      <label for>Masa Bayaran</label>
+                      <div class="input-group">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text">
+                            <i class="far fa-clock"></i>
+                          </span>
+                        </div>
+                        <Datepicker
+                          v-model="info.masa_bayaran"
+                          :config="options.masa_bayaran"
+                          required
+                        ></Datepicker>
+                      </div>
+                    </div>
+                  </div>
+                  
+
                 </div>
-              
+              </div>
+            </div>
+          </div>
+
+          <div v-if="bankpilihan == 'cimb' " class="card-deck h-100 mt-3">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title text-left">Butir-Butir Pembayaran CIMB</h5>
+                <hr>
+
+                <div class="row text-left">
+                  <div class="col-sm-12 col-md-3 text-left">
+                    <div class="form-group">
+                      <label for>
+                        No CDM ID
+                        <i class="fas fa-pencil-paintbrush"></i>
+                      </label>
+                      <input
+                        type="text"
+                        name="nama_penuh_penaja"
+                        v-model="info.cdm_id"
+                        class="form-control text-uppercase"
+                        autocomplete="off"
+                        required
+                      >
+                    </div>
+                  </div>
+
+                  <div class="col-sm-12 col-md-3 text-left">
+                    <div class="form-group">
+                      <label for>
+                        No SEQ No
+                        <i class="fas fa-pencil-paintbrush"></i>
+                      </label>
+                      <input
+                        type="text"
+                        name="no_seq"
+                        v-model="info.no_seq"
+                        class="form-control text-uppercase"
+                        autocomplete="off"
+                        required
+                      >
+                    </div>
+                  </div>
+
+                  <div class="col-sm-12 col-md-3 text-left">
+                    <div class="form-group">
+                      <label for>Tarikh Bayaran</label>
+                      <div class="input-group">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text">
+                            <i class="far fa-calendar-alt"></i>
+                          </span>
+                        </div>
+                        <Datepicker
+                          v-model="info.tarikh_bayaran"
+                          :config="options.tarikh_bayaran"
+                          required
+                        ></Datepicker>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-sm-12 col-md-3 text-left">
+                    <div class="form-group">
+                      <label for>Masa Bayaran</label>
+                      <div class="input-group">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text">
+                            <i class="far fa-clock"></i>
+                          </span>
+                        </div>
+                        <Datepicker
+                          v-model="info.masa_bayaran"
+                          :config="options.masa_bayaran"
+                          required
+                        ></Datepicker>
+                      </div>
+                    </div>
+                  </div>
+                  
+
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div v-if="bankpilihan == 'bsn' " class="card-deck h-100 mt-3">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title text-left">Butir-Butir Pembayaran BSN</h5>
+                <hr>
+
+                <div class="row text-left">
+                  <div class="col-sm-12 col-md-3 text-left">
+                    <div class="form-group">
+                      <label for>
+                        No CDM ID
+                        <i class="fas fa-pencil-paintbrush"></i>
+                      </label>
+                      <input
+                        type="text"
+                        name="nama_penuh_penaja"
+                        v-model="info.cdm_id"
+                        class="form-control text-uppercase"
+                        autocomplete="off"
+                        required
+                      >
+                    </div>
+                  </div>
+
+                  <div class="col-sm-12 col-md-3 text-left">
+                    <div class="form-group">
+                      <label for>
+                        No SEQ No
+                        <i class="fas fa-pencil-paintbrush"></i>
+                      </label>
+                      <input
+                        type="text"
+                        name="no_seq"
+                        v-model="info.no_seq"
+                        class="form-control text-uppercase"
+                        autocomplete="off"
+                        required
+                      >
+                    </div>
+                  </div>
+
+                  <div class="col-sm-12 col-md-3 text-left">
+                    <div class="form-group">
+                      <label for>Tarikh Bayaran</label>
+                      <div class="input-group">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text">
+                            <i class="far fa-calendar-alt"></i>
+                          </span>
+                        </div>
+                        <Datepicker
+                          v-model="info.tarikh_bayaran"
+                          :config="options.tarikh_bayaran"
+                          required
+                        ></Datepicker>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-sm-12 col-md-3 text-left">
+                    <div class="form-group">
+                      <label for>Masa Bayaran</label>
+                      <div class="input-group">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text">
+                            <i class="far fa-clock"></i>
+                          </span>
+                        </div>
+                        <Datepicker
+                          v-model="info.masa_bayaran"
+                          :config="options.masa_bayaran"
+                          required
+                        ></Datepicker>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <div class="card-footer bg-transparent text-center">
-        <div class="btn btn-outline-primary" @click="backToPaymentOption">Back to Payment Options</div>
-        <button type="submit" class="btn btn-primary ml-2">Kemaskini Pembayaran</button>
-      </div>
-
+        <div class="card-footer bg-transparent text-center">
+          <div class="btn btn-outline-primary" @click="backToPaymentOption">Kembali ke bayaran</div>
+          <button type="submit" class="btn btn-primary ml-2">Kemaskini Pembayaran</button>
+        </div>
       </form>
     </div>
   </div>
@@ -128,64 +358,78 @@
 </style>
 
 <script>
-import AppHeader from "@/components/AppHeader"
-import Datepicker from "vuejs-datepicker";
-import {API} from '../config';
-import Axios from 'axios';
+import AppHeader from "@/components/AppHeader";
+import { API } from "../config";
+import Axios from "axios";
 import Swal from "sweetalert2";
-require("@/assets/css/main.css")
+import Datepicker from "vue-bootstrap-datetimepicker";
+import "pc-bootstrap4-datetimepicker/build/css/bootstrap-datetimepicker.css";
+
+require("@/assets/css/main.css");
 
 export default {
   name: "payment_bank_transfer",
   data() {
     return {
+      options: {
+        tarikh_bayaran: {
+          format: "D MMMM YYYY"
+        },
+        masa_bayaran: {
+          format: "LT"
+        }
+      },
       active_el: "billplz",
+      bankpilihan: "",
       info: {
         total_invoice: "800.00",
         payment_gateway_charges: "0.0",
         amount_to_be_paid: "800.00",
         register_id: this.$route.params.register_id,
-        temporary_id: this.$route.params.temporary_id
+        temporary_id: this.$route.params.temporary_id,
+        tarikh_bayaran: "",
+        masa_bayaran: ""
       }
     };
   },
   mounted() {},
   components: {
-    Datepicker: Datepicker,
+    Datepicker,
     AppHeader
   },
   methods: {
+    pilihBankAnda: function(event) {
+      console.log("bank pilihan " + event.target.value);
+    },
     backToPaymentOption: function() {
       this.$router.push({
         name: "payment"
       });
     },
-    kemaskiniPembayaran: function(){
-      console.log(this.info)
-      Axios
-      .post(API.baseurl + 'register/update-cdm',{
+    kemaskiniPembayaran: function() {
+      Axios.post(API.baseurl + "register/update-cdm", {
         headers: {
-          'accept':'application/json'
+          accept: "application/json"
         },
         body: this.info
-      })
-      .then(response => {
-        console.log(response)
+      }).then(response => {
+        let resp = response.data.response
+        console.log(resp)
         Swal.fire({
-            title: "Success!",
-            text: "Compound has been paid",
-            type: "success",
-            confirmButtonText: "View ticket"
-          }).then(()=>{
-            this.$router.push({
-              name:'ticket',
-              params: {
-                register_id: this.info.register_id,
-                temporary_id: this.info.temporary_id
-              }
-            })
+          title: "Pembayaran Berjaya!",
+          text: "Kompaun MYR 800.00 telah dibayar",
+          type: "success",
+          confirmButtonText: "Lihat Temujanji"
+        }).then(() => {
+          this.$router.push({
+            name: "ticket",
+            params: {
+              register_id: this.info.register_id,
+              temporary_id: this.info.temporary_id
+            }
           });
-      })
+        });
+      });
     }
   }
 };

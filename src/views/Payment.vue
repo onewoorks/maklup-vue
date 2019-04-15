@@ -1,21 +1,25 @@
 <template>
   <div class="container">
-    <AppHeader title="Payment Instruction" subHeader="Pulkam 2019" />
+    <AppHeader title="Kaedah Pembayaran" subHeader="Pulkam 2019" />
     <div class="card-group mb-5 card-shadow">
       <div class="card col-sm-4" style="padding:0">
         <div class="card-body text-left">
-          <h3>Invoice Summary</h3>
+          <h3>Maklumat invois</h3>
           <hr>
 
           <table class="table table-sm">
             <tbody>
               <tr>
-                <th>Invoice No</th>
+                <th>Invois No</th>
                 <td class="text-right">#2019-{{info.invoice_no}}</td>
               </tr>
               <tr>
-                <th style="vertical-align: top;">Issued To</th>
+                <th style="vertical-align: top;">Pemohon</th>
                 <td class="text-right text-uppercase">{{ info.name }}</td>
+              </tr>
+              <tr>
+                <th style="vertical-align: top;">No Telefon</th>
+                <td class="text-right">{{ info.no_telefon }}</td>
               </tr>
               <tr>
                 <th style="vertical-align: top;">Email</th>
@@ -23,7 +27,7 @@
               </tr>
 
               <tr>
-                <th>Invoice Date</th>
+                <th>Tarikh Invois</th>
                 <td class="text-right">{{ info.invoice_date }}</td>
               </tr>
 
@@ -35,15 +39,15 @@
               </tr>
 
               <tr>
-                <th>Total Compound</th>
-                <td class="text-right">{{ info.total_invoice }}</td>
+                <th>Kompaun</th>
+                <td class="text-right">MYR {{ info.total_invoice }}</td>
               </tr>
               <tr>
-                <th colspan="2">Additional Charges</th>
+                <th colspan="2">Cas Tambahan</th>
               </tr>
               <tr>
                 <th>Payment Gateway</th>
-                <td class="text-right" id="additional_charge">{{ info.payment_gateway_charges}}</td>
+                <td class="text-right" id="additional_charge">MYR {{ info.payment_gateway_charges}}</td>
               </tr>
               <tr>
                 <th>&nbsp;</th>
@@ -59,29 +63,14 @@
                          font-size: 1.6rem;
                          font-weight: bold;
                          "
-        >RM {{ info.amount_to_be_paid}}</div>
+        >MYR {{ info.amount_to_be_paid}}</div>
       </div>
 
       <div class="card">
         <div class="card-body text-center">
-          <h4 class="card-title text-left mb-4">How do you want to pay?</h4>
-          <div id="payment_options" class="row card-items" style="margin:0;">
-            <div class="col-sm-6 payment_items mb-3" data-method="billplz" @click="pickBillPlz">
-              <div class="card" :class="{ 'border-success': active_el == 'billplz'}">
-                <div class="card-body">
-                  <img
-                    src="/img/payment_gateway/billplz.jpg"
-                    class="img-fluid"
-                    style="height: 104px;"
-                  >
-                </div>
-                <div
-                  class="card-footer"
-                  :class="{'bg-success text-white': active_el == 'billplz'}"
-                >BillPlz</div>
-              </div>
-            </div>
+          <h4 class="card-title text-left mb-4">Pilih pilihan kaedah pembayaran anda?</h4>
 
+          <div id="payment_options" class="row card-items" style="margin:0;">
             <div
               class="col-sm-3 payment_items mb-3"
               data-method="bank_transfer"
@@ -102,41 +91,22 @@
               </div>
             </div>
 
-            <div class="col-sm-3 payment_items mb-3 d-none" data-method="paypal">
-              <div class="card">
+            <div class="col-sm-6 payment_items mb-3" data-method="billplz" @click="pickBillPlz">
+              <div class="card" :class="{ 'border-success': active_el == 'billplz'}">
                 <div class="card-body">
-                  <img src="/img/payment_gateway/paypal.jpg" class="img-fluid">
+                  <img
+                    src="/img/payment_gateway/billplz.jpg"
+                    class="img-fluid"
+                    style="height: 104px;"
+                  >
                 </div>
-                <div class="card-footer">PayPal</div>
+                <div
+                  class="card-footer"
+                  :class="{'bg-success text-white': active_el == 'billplz'}"
+                >BillPlz</div>
               </div>
             </div>
 
-            <div class="col-sm-3 payment_items mb-3 d-none" data-method="maybank2u_pay">
-              <div class="card">
-                <div class="card-body">
-                  <img src="/img/payment_gateway/maybank2u_pay.jpg" class="img-fluid">
-                </div>
-                <div class="card-footer">Maybank2u Pay</div>
-              </div>
-            </div>
-
-            <div class="col-sm-3 payment_items mb-3 d-none" data-method="maybank_qr">
-              <div class="card">
-                <div class="card-body">
-                  <img src="/img/payment_gateway/maybank_qrpay.jpg" class="img-fluid">
-                </div>
-                <div class="card-footer">Maybank QR</div>
-              </div>
-            </div>
-
-            <div class="col-sm-3 payment_items d-none" data-method="jompay">
-              <div class="card">
-                <div class="card-body">
-                  <img src="/img/payment_gateway/jompay.jpg" class="img-fluid">
-                </div>
-                <div class="card-footer">Jom PAY</div>
-              </div>
-            </div>
           </div>
         </div>
 
@@ -172,19 +142,19 @@ export default {
   },
   data() {
     return {
-      active_el: "billplz",
+      active_el: "bank_transfer",
       billplz_id: "",
       billplz_url: "",
-      payment_link: "billplz",
-      next_button: 'Continue to Payment',
+      payment_link: "bank_transfer",
+      next_button: 'Lakukan Pembayaran',
       info: {
         pemohon_id: "",
         name: "",
         email: "",
         invoice_date: "",
         total_invoice: "800.00",
-        payment_gateway_charges: "1.50",
-        amount_to_be_paid: "801.50"
+        payment_gateway_charges: "0.00",
+        amount_to_be_paid: "800.00"
       }
     };
   },
@@ -197,6 +167,7 @@ export default {
       let resp = response.data.response;
       this.info.name = resp.data_pemohon.nama;
       this.info.email = resp.data_pemohon.email;
+      this.info.no_telefon = "+" + resp.data_pemohon.kod_negara + resp.data_pemohon.no_telefon
       this.info.invoice_date = resp.timestamp;
       this.info.invoice_no = resp.temporary_id;
       this.info.pemohon_id = resp.id;

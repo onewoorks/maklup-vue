@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <AppHeader title="Your Confirmation Ticket" subHeader="Pulkam 2019"/>
+    <AppHeader title="Makluman Bayaran" subHeader="Pengesahan bayaran akan dimaklumkan melalui sms setelah pihak kami buat semakan"/>
     <div ref="content">
     <div class="card h-100 card-shadow">
       <div class="card-body">
@@ -9,19 +9,19 @@
             <table class="table table-sm mt-4">
               <tbody>
                 <tr>
-                  <th>Payment Status</th>
+                  <th>Status Bayaran</th>
                   <td class="text-right text-uppercase">{{payment.status}}</td>
                 </tr>
                 <tr>
-                  <th>Invoice No</th>
+                  <th>Invois No</th>
                   <td class="text-right">#2019-{{invoice_no}}</td>
                 </tr>
                 <tr>
-                  <th style="vertical-align: top;">Issued To</th>
+                  <th style="vertical-align: top;">Pemohon</th>
                   <td class="text-right text-uppercase">{{ info.nama }}</td>
                 </tr>
                 <tr>
-                  <th style="vertical-align: top;">Contact No</th>
+                  <th style="vertical-align: top;">No Telefon</th>
                   <td class="text-right text-uppercase">{{ info.no_telefon }}</td>
                 </tr>
                 <tr>
@@ -30,12 +30,12 @@
                 </tr>
 
                 <tr>
-                  <th>Invoice Date</th>
+                  <th>Tarikh Invois</th>
                   <td class="text-right">{{ invoice_date }}</td>
                 </tr>
                 <tr>
-                  <th>Payment Option</th>
-                  <td class="text-right">{{ payment.option }}</td>
+                  <th>Cara Bayaran</th>
+                  <td class="text-right text-uppercase">{{ payment.option }}</td>
                 </tr>
 
                 <tr>
@@ -46,26 +46,28 @@
                 </tr>
 
                 <tr>
-                  <th>Compound</th>
-                  <td class="text-right">RM {{ compound }}</td>
+                  <th>Kompaun</th>
+                  <td class="text-right">MYR {{ compound }}</td>
                 </tr>
                 <tr>
-                  <th>Additional Charges</th>
-                  <td class="text-right">RM {{ additional_charges }}</td>
+                  <th>Cas Tambahan</th>
+                  <td class="text-right">MYR {{ additional_charges }}</td>
                 </tr>
                 <tr>
-                  <th>Total</th>
-                  <td class="text-right">RM {{ total_amount }}</td>
+                  <th>Jumlah</th>
+                  <td class="text-right">MYR {{ total_amount }}</td>
                 </tr>
 
                 <tr>
-                  <th colspan="2"></th>
+                  <td colspan="2" class="text-center pt-3 pb-0">
+                    <barcode :value="invoice_no" height="50" display-value="false"></barcode>
+                  </td>
                 </tr>
               </tbody>
             </table>
           </div>
           <div class="col-sm-8 d-none d-sm-block" style="border-left:1px solid #ddd ">
-            <h4>TARIKH TEMUJANJI</h4>
+            <h4><strong>TARIKH TEMUJANJI</strong></h4>
             <h3>{{ appointment_slot }} ({{ appointment_session }})</h3>
             <qrcode v-if="payment.status == 'paid'" :value="qrtoken" :options="{ width: 400 }"></qrcode>
           </div>
@@ -73,13 +75,16 @@
             <h4>TARIKH TEMUJANJI</h4>
             <h3>{{ appointment_slot }} ({{ appointment_session }})</h3>
             <qrcode v-if="payment.status == 'paid'" :value="qrtoken" :options="{ width: 290 }"></qrcode>
+            
+            
           </div>
         </div>
       </div>
     </div>
     </div>
+    
     <div class='mt-5 mb-5' v-if="payment.status == 'paid'">
-              <div class="btn btn-block btn-primary" @click="download">Save Ticket</div>
+              <div class="btn btn-block btn-primary" @click="download">Simpan Ticket</div>
             </div>
   </div>
 </template>
@@ -93,14 +98,16 @@ import Axios from "axios";
 import VueQrcode from "@chenfengyuan/vue-qrcode";
 import { API } from "../config";
 import jsPDF from "jspdf";
-import html2canvas from 'html2canvas'
+import html2canvas from 'html2canvas';
+import VueBarcode from 'vue-barcode';
 require('@/assets/css/main.css')
 
 export default {
   name: "ticket",
   components: {
     AppHeader,
-    qrcode: VueQrcode
+    qrcode: VueQrcode,
+    barcode: VueBarcode
   },
   data() {
     return {
@@ -130,8 +137,8 @@ export default {
         this.$route.params.temporary_id
     ).then(response => {
       let resp = response.data.response;
-      console.log(resp)
       this.info = resp.data_pemohon;
+      this.info.no_telefon = "+" + resp.data_pemohon.kod_negara + resp.data_pemohon.no_telefon
       this.invoice_date = resp.timestamp;
       this.payment = resp.payment;
       this.invoice_no = resp.temporary_id;
@@ -174,13 +181,13 @@ export default {
       });
     },
     download: function() {
-      const doc = new jsPDF('l', 'mm',[595,295]);
+      const doc = new jsPDF('l', 'mm',[595,322]);
       var canvasElement = document.createElement("canvas");
       html2canvas(this.$refs.content, { canvas: canvasElement })
       .then(function(canvas) {
         const img = canvas.toDataURL("image/png");
         // doc.addImage(img, "JPEG", 5, 5,200,95);
-        doc.addImage(img,'JPEG',5,5,200,95,'NONE')
+        doc.addImage(img,'JPEG',5,5,200,104,'NONE')
         doc.save("sample.pdf");
       });
     }

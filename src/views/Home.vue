@@ -4,7 +4,7 @@
 
     <div class="row">
       <div class="col-sm-12 col-md-6">
-        <div class="card h-100">
+        <div class="card h-100 card-shadow">
           <div class="card-body">
             <h3>Pendaftaran Baru</h3>
             <div class="btn btn-primary mt-3" @click="goToPendaftaran">Daftar Maklumat</div>
@@ -12,7 +12,7 @@
         </div>
       </div>
       <div class="col-sm-12 col-md-6">
-        <div class="card h-100">
+        <div class="card h-100 card-shadow">
           <div class="card-body">
             <h3>Kemaskini Maklumat</h3>
             <div class="mt-4">
