@@ -5,7 +5,7 @@
     <div class="card h-100 card-shadow">
       <div class="card-body">
         <div class="row">
-          <div class="col-sm-4 text-left pt-0 pb-0">
+          <div class="col-sm-5 text-left pt-0 pb-0">
             <table class="table table-sm mt-4">
               <tbody>
                 <tr>
@@ -60,13 +60,13 @@
 
                 <tr>
                   <td colspan="2" class="text-center pt-3 pb-0">
-                    <barcode :value="invoice_no" height="50" display-value="false"></barcode>
+                    <barcode :value="barcode" height="50" display-value="true"></barcode>
                   </td>
                 </tr>
               </tbody>
             </table>
           </div>
-          <div class="col-sm-8 d-none d-sm-block" style="border-left:1px solid #ddd ">
+          <div class="col-sm-7 d-none d-sm-block" style="border-left:1px solid #ddd ">
             <h4><strong>TARIKH TEMUJANJI</strong></h4>
             <h3>{{ appointment_slot }} ({{ appointment_session }})</h3>
             <qrcode v-if="payment.status == 'paid'" :value="qrtoken" :options="{ width: 400 }"></qrcode>
@@ -114,6 +114,7 @@ export default {
       info: "",
       invoice_date: "",
       invoice_no: "",
+      barcode: "",
       additional_charges: "0.00",
       compound: "800.00",
       total_amount: "0.00",
@@ -137,6 +138,7 @@ export default {
         this.$route.params.temporary_id
     ).then(response => {
       let resp = response.data.response;
+      console.log(resp)
       this.info = resp.data_pemohon;
       this.info.no_telefon = "+" + resp.data_pemohon.kod_negara + resp.data_pemohon.no_telefon
       this.invoice_date = resp.timestamp;
@@ -144,6 +146,7 @@ export default {
       this.invoice_no = resp.temporary_id;
       this.appointment_slot = resp.appointment.slot
       this.appointment_session = resp.appointment.session
+      this.barcode = resp.register_id+ " " + resp.temporary_id
       if (this.payment.status == "paid") {
         this.generateQrCode();
         this.additionalCharges(this.payment.option);

@@ -5,7 +5,7 @@
       <div class="card h-100 card-shadow">
         <div class="card-body">
           <div class="row">
-            <div class="col-sm-4 text-left pt-0 pb-0">
+            <div class="col-sm-5 text-left pt-0 pb-0">
               <table class="table table-sm mt-4">
                 <tbody>
                   <tr>
@@ -63,7 +63,7 @@
 
                   <tr>
                     <td colspan="2" class="text-center">
-                      <barcode :value="info.invoice_no" height="50" display-value="false"></barcode>
+                      <barcode :value="barcode" height="50" display-value="false"></barcode>
                     </td>
                   </tr>
                 </tbody>
@@ -73,9 +73,9 @@
                 v-if="payment_status == 'NOT PAID'"
                 class="btn btn-block btn-outline-primary mt-5"
                 @click="backToPaymentOption"
-              >Back to Payment Options</div>
+              >Kembali ke pilihan bayaran</div>
             </div>
-            <div class="col-sm-8" style="border-left:1px solid #ddd ">
+            <div class="col-sm-7" style="border-left:1px solid #ddd ">
               <h4>TARIKH TEMUJANJI</h4>
               <h3>{{ appointment_slot }} ({{ appointment_session }})</h3>
               <qrcode v-if="payment_status == 'PAID'" :value="qrtoken" :options="{ width: 400 }"></qrcode>
@@ -112,6 +112,7 @@ export default {
   },
   data() {
     return {
+      barcode: "",
       payment_status: "",
       billplz: "",
       info: {},
@@ -181,8 +182,7 @@ export default {
           this.info.invoice_date = resp.timestamp;
           this.info.register_id = resp.register_id;
           this.info.temporary_id = resp.temporary_id;
-          console.log(resp.appointment)
-          
+          this.barcode = resp.register_id + " " + resp.temporary_id
           this.info.no_telefon =
             "+" + resp.data_pemohon.kod_negara + resp.data_pemohon.no_telefon;
           if (this.payment_status == "PAID") {
