@@ -68,14 +68,15 @@
           </div>
           <div class="col-sm-7 d-none d-sm-block" style="border-left:1px solid #ddd ">
             <h4><strong>TARIKH TEMUJANJI</strong></h4>
-            <h3>{{ appointment_slot }} ({{ appointment_session }})</h3>
+            <h3>{{ appointment_slot }} {{ appointment_session }}</h3>
             <qrcode v-if="payment.status == 'paid'" :value="qrtoken" :options="{ width: 400 }"></qrcode>
+            <qrcode v-if="payment.status == 'semakan'" :value="qrtoken" :options="{ width: 400 }"></qrcode>
           </div>
           <div class="col-sm-12 d-sm-none" style="">
-            <h4>TARIKH TEMUJANJI</h4>
-            <h3>{{ appointment_slot }} ({{ appointment_session }})</h3>
+            <h4><strong>TARIKH TEMUJANJI</strong></h4>
+            <h3>{{ appointment_slot }} {{ appointment_session }}</h3>
             <qrcode v-if="payment.status == 'paid'" :value="qrtoken" :options="{ width: 290 }"></qrcode>
-            
+            <qrcode v-if="payment.status == 'semakan'" :value="qrtoken" :options="{ width: 290 }"></qrcode>
             
           </div>
         </div>
@@ -138,7 +139,6 @@ export default {
         this.$route.params.temporary_id
     ).then(response => {
       let resp = response.data.response;
-      console.log(resp)
       this.info = resp.data_pemohon;
       this.info.no_telefon = "+" + resp.data_pemohon.kod_negara + resp.data_pemohon.no_telefon
       this.invoice_date = resp.timestamp;
@@ -147,10 +147,21 @@ export default {
       this.appointment_slot = resp.appointment.slot
       this.appointment_session = resp.appointment.session
       this.barcode = resp.register_id+ " " + resp.temporary_id
+      
       if (this.payment.status == "paid") {
+        this.appointment_slot = resp.appointment.slot
+        this.appointment_session =  "(" + resp.appointment.session + ")"
         this.generateQrCode();
         this.additionalCharges(this.payment.option);
       }
+
+      if (this.payment.status == "semakan") {
+        this.appointment_slot = "Pembayaran sedang diproses."
+        this.appointment_session = ""
+        this.generateQrCode();
+        this.additionalCharges(this.payment.option);
+      }
+
     });
   },
   methods: {
