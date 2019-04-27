@@ -373,7 +373,7 @@ export default {
         },
         tarikh_sah: {
           format: "D MMMM YYYY",
-          minDate: new Date(),
+          minDate: moment().add(30, 'days')
         },
         kod_negara: [
           { text: "MALAYSIA (60)", value: "60" },
