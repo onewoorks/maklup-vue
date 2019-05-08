@@ -244,9 +244,6 @@
       <div class="card mb-3 card-shadow">
         <div class="card-header text-left">
           <div>Maklumat Pasport perjalanan / dokumen perjalanan</div>
-          <div>
-            <i>particulars of passport / travel document</i>
-          </div>
         </div>
 
         <div class="card-body">
@@ -316,11 +313,74 @@
               </div>
             </div>
 
-            <div class="col-12">
-              
-            </div>
+            <div class="col-12"></div>
 
             <div class="col-12 text-uppercase mb-4"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card mb-3 card-shadow">
+        <div class="card-header text-left">Maklumat Tiket Perjalanan Pulang</div>
+        <div class="card-body">
+          <div class="row text-left">
+            <div class="col-sm-12 col-lg-6">
+              <div class="form-group">
+                <label>Jenis Pengangkutan</label>
+                <div>
+                  <div class="form-check-inline" v-for="(option,key) in options.pengangkutan" v-bind:key="key">
+                    <label class="form-check-label">
+                      <input type="radio" v-model="info.tiket_pulang.jenis_pengangkutan" class="form-check-input" :value="option.value"> {{ option.text }}
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-sm-12 col-lg-6">
+              <div class="form-group">
+                <label>No Tiket</label>
+                <input type="text" v-model="info.tiket_pulang.no_tiket" class="form-control text-uppercase" />
+              </div>
+            </div>
+          </div>
+
+        <div class="row text-left">
+          <div class="col-sm-6 col-lg-6">
+            <div class="form-group">
+              <label>Tarikh Perjalanan</label>
+              <div class="input-group">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">
+                      <i class="far fa-calendar-alt"></i>
+                    </span>
+                  </div>
+                  <DatePicker2 v-model="info.tiket_pulang.tarikh" :config="options.tarikh_sah"></DatePicker2>
+                </div>
+            </div>
+          </div>
+          <div class="col-sm-6 col-lg-6">
+            <div class="form-group">
+              <label>Masa</label>
+              <div class="input-group">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">
+                      <i class="far fa-calendar-alt"></i>
+                    </span>
+                  </div>
+                  <DatePicker2 v-model="info.tiket_pulang.masa" :config="options.masa_saja"></DatePicker2>
+                </div>
+            </div>
+          </div>
+
+        </div>
+<div class="row text-left">
+            <div class="col-sm-12">
+              <div class="form-group">
+                <label>Destinasi</label>
+                <input type="text" v-model="info.tiket_pulang.destinasi" class="form-control text-uppercase" />
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -345,7 +405,7 @@ import AppHeader from "@/components/AppHeader";
 import Axios from "axios";
 import { API } from "../config";
 import Swal from "sweetalert2";
-import moment from "moment"
+import moment from "moment";
 import DatePicker2 from "vue-bootstrap-datetimepicker";
 import "pc-bootstrap4-datetimepicker/build/css/bootstrap-datetimepicker.css";
 
@@ -373,8 +433,16 @@ export default {
         },
         tarikh_sah: {
           format: "D MMMM YYYY",
-          minDate: moment().add(30, 'days')
+          minDate: moment().add(30, "days")
         },
+        masa_saja: {
+          format: "LT"
+        }, 
+        pengangkutan: [
+          { text: "KERETA, KERETAPI, BAS", value: "KERETA, KERETAPI, BAS"},
+          { text: "KAPAL TERBANG", value:"KAPAL TERBANG"},
+          { text: "FERI, KAPAL", value: "FERI, KAPAL"}
+        ],
         kod_negara: [
           { text: "MALAYSIA (60)", value: "60" },
           { text: "INDONESIA (62)", value: "62" },
@@ -417,7 +485,7 @@ export default {
         nama: "",
         jantina: "LELAKI",
         tempat_lahir: "INDONESIA",
-        tarikh_lahir: moment(new Date, 'YYYY-MM-DD').format('D MMMM YYYY'),
+        tarikh_lahir: moment(new Date(), "YYYY-MM-DD").format("D MMMM YYYY"),
         warganegara: "INDONESIA",
         pekerjaan: "",
         alamat_1: "",
@@ -430,7 +498,10 @@ export default {
         jenis_dokumen_perjalanan: "PASSPORT",
         nombor: "",
         negara_dikeluarkan: "INDONESIA",
-        sah_sehingga: ""
+        sah_sehingga: "",
+        tiket_pulang: {
+          jenis_pengangkutan: ""
+        }
       }
     };
   },
