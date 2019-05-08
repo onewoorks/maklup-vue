@@ -328,9 +328,19 @@
               <div class="form-group">
                 <label>Jenis Pengangkutan</label>
                 <div>
-                  <div class="form-check-inline" v-for="(option,key) in options.pengangkutan" v-bind:key="key">
+                  <div
+                    class="form-check-inline"
+                    v-for="(option,key) in options.pengangkutan"
+                    v-bind:key="key"
+                  >
                     <label class="form-check-label">
-                      <input type="radio" v-model="info.tiket_pulang.jenis_pengangkutan" class="form-check-input" :value="option.value"> {{ option.text }}
+                      <input
+                        type="radio"
+                        v-model="info.tiket_pulang.jenis_pengangkutan"
+                        class="form-check-input"
+                        :value="option.value"
+                      >
+                      {{ option.text }}
                     </label>
                   </div>
                 </div>
@@ -340,16 +350,20 @@
             <div class="col-sm-12 col-lg-6">
               <div class="form-group">
                 <label>No Tiket</label>
-                <input type="text" v-model="info.tiket_pulang.no_tiket" class="form-control text-uppercase" />
+                <input
+                  type="text"
+                  v-model="info.tiket_pulang.no_tiket"
+                  class="form-control text-uppercase"
+                >
               </div>
             </div>
           </div>
 
-        <div class="row text-left">
-          <div class="col-sm-6 col-lg-6">
-            <div class="form-group">
-              <label>Tarikh Perjalanan</label>
-              <div class="input-group">
+          <div class="row text-left">
+            <div class="col-sm-6 col-lg-6">
+              <div class="form-group">
+                <label>Tarikh Perjalanan</label>
+                <div class="input-group">
                   <div class="input-group-prepend">
                     <span class="input-group-text">
                       <i class="far fa-calendar-alt"></i>
@@ -357,12 +371,12 @@
                   </div>
                   <DatePicker2 v-model="info.tiket_pulang.tarikh" :config="options.tarikh_sah"></DatePicker2>
                 </div>
+              </div>
             </div>
-          </div>
-          <div class="col-sm-6 col-lg-6">
-            <div class="form-group">
-              <label>Masa</label>
-              <div class="input-group">
+            <div class="col-sm-6 col-lg-6">
+              <div class="form-group">
+                <label>Masa</label>
+                <div class="input-group">
                   <div class="input-group-prepend">
                     <span class="input-group-text">
                       <i class="far fa-calendar-alt"></i>
@@ -370,15 +384,18 @@
                   </div>
                   <DatePicker2 v-model="info.tiket_pulang.masa" :config="options.masa_saja"></DatePicker2>
                 </div>
+              </div>
             </div>
           </div>
-
-        </div>
-<div class="row text-left">
+          <div class="row text-left">
             <div class="col-sm-12">
               <div class="form-group">
                 <label>Destinasi</label>
-                <input type="text" v-model="info.tiket_pulang.destinasi" class="form-control text-uppercase" />
+                <input
+                  type="text"
+                  v-model="info.tiket_pulang.destinasi"
+                  class="form-control text-uppercase"
+                >
               </div>
             </div>
           </div>
@@ -437,11 +454,11 @@ export default {
         },
         masa_saja: {
           format: "LT"
-        }, 
+        },
         pengangkutan: [
-          { text: "KERETA, KERETAPI, BAS", value: "KERETA, KERETAPI, BAS"},
-          { text: "KAPAL TERBANG", value:"KAPAL TERBANG"},
-          { text: "FERI, KAPAL", value: "FERI, KAPAL"}
+          { text: "KERETA, KERETAPI, BAS", value: "KERETA, KERETAPI, BAS" },
+          { text: "KAPAL TERBANG", value: "KAPAL TERBANG" },
+          { text: "FERI, KAPAL", value: "FERI, KAPAL" }
         ],
         kod_negara: [
           { text: "MALAYSIA (60)", value: "60" },
