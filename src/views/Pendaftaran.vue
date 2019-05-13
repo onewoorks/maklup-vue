@@ -197,7 +197,7 @@
               </div>
             </div>
 
-            <div class="col-sm-12 col-md-6">
+            <div class="col-sm-12 col-lg-5">
               <div class="form-group">
                 <label for>
                   Email
@@ -207,14 +207,14 @@
               </div>
             </div>
 
-            <div class="col-sm-12 col-md-6">
+            <div class="col-sm-12 col-lg-7">
               <div class="form-group">
                 <label for>
                   No Telefon
                   <i class="fas fa-pencil-paintbrush"></i>
                 </label>
                 <div class="row">
-                  <div class="col-6 pr-1">
+                  <div class="col-md-5 col-sm-12 kod-phone">
                     <select v-model="info.kod_negara" class="form-control text-uppercase">
                       <option
                         v-for="(option, key) in options.kod_negara"
@@ -223,7 +223,8 @@
                       >{{ option.text }}</option>
                     </select>
                   </div>
-                  <div class="col-6 pl-0">
+                  <div class="col-md-7 col-sm-12 no-telefon">
+                    
                     <input
                       type="text"
                       name="no_telefon"
@@ -231,8 +232,11 @@
                       class="form-control text-uppercase"
                       autocomplete="off"
                       required
+                      @focus="showtip"
+                      @blur="hidetip"
                       @keypress="onlyNumber"
                     >
+                    <div class='tp-telefon' :class="tooltip.telefon">Tidak perlu dimulakan dengan no 0</div>
                   </div>
                 </div>
               </div>
@@ -369,7 +373,7 @@
                       <i class="far fa-calendar-alt"></i>
                     </span>
                   </div>
-                  <DatePicker2 v-model="info.tiket_pulang.tarikh" :config="options.tarikh_sah"></DatePicker2>
+                  <DatePicker2 v-model="info.tiket_pulang.tarikh" :config="options.tarikh"></DatePicker2>
                 </div>
               </div>
             </div>
@@ -414,6 +418,7 @@
 </template>
 
 <style scoped src='@/assets/css/main.css'>
+  
 </style>
 
 
@@ -440,10 +445,16 @@ export default {
       placeholder: {
         nombor: "NOMBOR PASSPORT"
       },
+      tooltip: {
+        telefon: 'd-none'
+      },
       button: {
         next: "Seterusnya"
       },
       options: {
+        tarikh: {
+          format: "D MMMM YYYY",
+        },
         tarikh_sahaja: {
           format: "D MMMM YYYY",
           maxDate: new Date()
@@ -545,6 +556,12 @@ export default {
     }
   },
   methods: {
+    showtip: function(){
+      this.tooltip.telefon = ''
+    },
+    hidetip: function(){
+      this.tooltip.telefon = 'd-none'
+    },
     getFormValues: function() {
       if (this.mode == "baru") {
         Axios.post(API.baseurl + "register/new", {
