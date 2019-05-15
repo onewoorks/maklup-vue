@@ -181,7 +181,8 @@
               <div class="card-body">
                 <h5 class="card-title text-left">Butir-Butir Pembayaran CIMB</h5>
                 <hr>
-
+                {{cimb_transaction}}
+                <div v-if="alert.cimb_transaction" class="alert alert-warning">No Trasaksi CDM tidak sah, sila semak semula atau hubungi kami sekiranya perlu</div>
                 <div class="row text-left">
                   <div class="col-sm-12 col-md-3 text-left">
                     <div class="form-group">
@@ -367,10 +368,19 @@ import "pc-bootstrap4-datetimepicker/build/css/bootstrap-datetimepicker.css";
 
 require("@/assets/css/main.css");
 
+const fixedEncodeURIComponent = (str) => {
+  return encodeURIComponent(str).replace(/[!'()*]/g, (c) => {
+    return '%' + c.charCodeAt(0).toString(16)
+  })
+}
+
 export default {
   name: "payment_bank_transfer",
   data() {
     return {
+      alert: {
+        cimb_transaction: false
+      },
       options: {
         tarikh_bayaran: {
           format: "D MMMM YYYY"
@@ -397,6 +407,23 @@ export default {
     Datepicker,
     AppHeader
   },
+  computed:{
+    cimb_transaction: function(){
+      if(typeof this.info.cdm_id !== 'undefined' && typeof this.info.no_seq !== 'undefined'){
+        let transcationid = this.info.cdm_id + this.info.no_seq
+        let cdmid = fixedEncodeURIComponent(this.info.cdm_id)
+        let url = `cdmid=${cdmid}&seqid=${this.info.no_seq}`
+        Axios.get(`${API.baseurl}register/check-cdm-code?${url}`)
+        .then(response=> {
+          let resp = response.data.response
+          if(resp.data.length!=0){
+           this.alert.cimb_transaction = true
+           }
+        })
+      }
+      
+    }
+  },
   methods: {
     pilihBankAnda: function(event) {
       console.log("bank pilihan " + event.target.value);
@@ -414,7 +441,6 @@ export default {
         body: this.info
       }).then(response => {
         let resp = response.data.response
-        console.log(resp)
         Swal.fire({
           title: "Pembayaran Sedang Diproses!",
           text: "Kompaun MYR 800.00 telah dibayar",

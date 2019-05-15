@@ -467,8 +467,8 @@ export default {
           body: this.info
         }).then(response => {
           let resp = response.data.response;
-          window.location.href =
-            "./payment/" + resp.register_id + "/" + resp.temporary_id;
+          // window.location.href =
+          //   "./payment/" + resp.register_id + "/" + resp.temporary_id;
         });
       } else {
         this.kemaskiniMaklumat();

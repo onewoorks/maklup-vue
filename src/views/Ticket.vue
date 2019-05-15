@@ -147,7 +147,7 @@ export default {
       
       if (this.payment.status == "paid") {
         this.appointment_slot = resp.appointment.slot
-        this.appointment_session = resp.appointment.session
+        this.appointment_session = "(" + resp.appointment.session + ")"
         this.generateQrCode();
         this.additionalCharges(this.payment.option);
       }
